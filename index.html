@@ -280,34 +280,41 @@
         el.animate([{ transform: 'scale(1.02)' }, { transform: 'scale(1)' }], { duration: 200 });
     }
 
-    function goConfirm(){
-    if(!selected){
-        // default if none chosen
-        selected = 'Dressy Chic';
+    function goConfirm() {
+        // If nothing is selected yet, default to first option
+        if (!selected) {
+            selected = "Dressy Chic";
+        }
+
+        // Clear old references
+        const refsEl = document.getElementById("refsContainer");
+        refsEl.innerHTML = "";
+
+        // Grab the correct reference list
+        const list = refs[selected] || [];
+        list.forEach((url) => {
+            const img = document.createElement("img");
+            img.src = url;
+            img.className = "ref-img";
+            img.alt = selected + " reference";
+            refsEl.appendChild(img);
+        });
+
+        // Update the text on page 4
+        document.getElementById("confirmLead").textContent =
+            `You selected: ${selected}. Here are some outfit references ✨`;
+
+        // Switch from page3 → page4
+        document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
+        document.getElementById("page3").setAttribute("aria-hidden", "true");
+        const next = document.getElementById("page4");
+        next.classList.add("active");
+        next.setAttribute("aria-hidden", "false");
+
+        // Optional: scroll smoothly to top of new page
+        window.scrollTo({ top: 0, behavior: "smooth" });
     }
-    const refsEl = document.getElementById('refsContainer');
-    refsEl.innerHTML = ''; // clear previous
 
-    const list = refs[selected] || refs['Dressy Chic'];
-    list.forEach(url => {
-        const img = document.createElement('img');
-        img.src = url;
-        img.className = 'ref-img';
-        img.alt = selected + ' reference';
-        refsEl.appendChild(img);
-    });
-
-    // update text and gif (optional)
-    document.getElementById('confirmLead').textContent = `You selected: ${selected}. Here are some outfit references:`;
-    const refGif = document.getElementById('refGif');
-    refGif.src = (selected === 'Cozy Casual')
-        ? 'https://media.giphy.com/media/3o6Mbl0fbf4b9vK6O0/giphy.gif'
-        : 'https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif';
-
-    // Show page 4
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('page4').classList.add('active');
-    }
 
 
   // Reject behavior: shrinking & random moving; max 4 rejects
