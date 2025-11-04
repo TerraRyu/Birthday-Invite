@@ -147,7 +147,7 @@
       </section>
 
       <!-- Page 3: outfit -->
-      <section id="page3" class="page" aria-hidden="true">
+    <section id="page3" class="page" aria-hidden="true">
         <div class="title">Pick an outfit vibe 💃</div>
         <div class="lead">Tap a style — I’ll show a few real references for your pick</div>
         <div class="grid">
@@ -175,7 +175,7 @@
           <button class="btn secondary small" onclick="show(2)">Back</button>
           <button class="btn" onclick="goConfirm()">See references</button>
         </div>
-      </section>
+    </section>
 
       <!-- Page 4: Confirm references of selected outfit -->
       <section id="page4" class="page" aria-hidden="true">
@@ -251,7 +251,7 @@
     "Semi-Casual Cute": [
         "PICC/IMG_20201218_203137.jpg",
         "PICC/Screenshot_2022-06-21-17-50-39-53_6012fa4d4ddec268fc5c7112cbb265e7.jpg",
-        "PICC/Screenshot 2025-11-04 171719.png"
+        "PICC/Screenshot_2025-11-04_171719.png"
     ],
     "Cozy Casual": [
         "PICC/IMG20220821132602.jpg",
@@ -286,6 +286,12 @@
             selected = "Dressy Chic";
         }
 
+        if (!refs[selected]) {
+            alert("Oops! Could not find outfit references. Please select again.");
+            return;
+        }
+
+
         // Clear old references
         const refsEl = document.getElementById("refsContainer");
         refsEl.innerHTML = "";
@@ -318,88 +324,88 @@
 
 
   // Reject behavior: shrinking & random moving; max 4 rejects
-  let rejectCount = 0;
-  const rejectBtn = document.getElementById('rejectBtn');
-  function rejectBehavior(){
-    rejectCount++;
-    // build "very" string
-    let verys = '';
-    for(let i=0;i<rejectCount;i++) verys += 'very ';
-    document.getElementById('askTitle').textContent = `Are you ${verys}sure?`;
-    // shrink button progressively
-    const scale = Math.max(0.45, 1 - 0.16 * rejectCount);
-    rejectBtn.style.transform = `scale(${scale})`;
-    // random move inside acceptArea
-    const area = document.getElementById('acceptArea');
-    const rect = area.getBoundingClientRect();
-    const btnW = Math.max(80, rejectBtn.offsetWidth);
-    const btnH = Math.max(30, rejectBtn.offsetHeight);
-    const pad = 8;
-    const x = Math.random() * (rect.width - btnW - pad) + pad;
-    const y = Math.random() * (rect.height - btnH - pad) + pad;
-    rejectBtn.style.left = x + 'px';
-    rejectBtn.style.top = y + 'px';
-    rejectBtn.style.position = 'absolute';
+    let rejectCount = 0;
+    const rejectBtn = document.getElementById('rejectBtn');
+    function rejectBehavior(){
+        rejectCount++;
+        // build "very" string
+        let verys = '';
+        for(let i=0;i<rejectCount;i++) verys += 'very ';
+        document.getElementById('askTitle').textContent = `Are you ${verys}sure?`;
+        // shrink button progressively
+        const scale = Math.max(0.45, 1 - 0.16 * rejectCount);
+        rejectBtn.style.transform = `scale(${scale})`;
+        // random move inside acceptArea
+        const area = document.getElementById('acceptArea');
+        const rect = area.getBoundingClientRect();
+        const btnW = Math.max(80, rejectBtn.offsetWidth);
+        const btnH = Math.max(30, rejectBtn.offsetHeight);
+        const pad = 8;
+        const x = Math.random() * (rect.width - btnW - pad) + pad;
+        const y = Math.random() * (rect.height - btnH - pad) + pad;
+        rejectBtn.style.left = x + 'px';
+        rejectBtn.style.top = y + 'px';
+        rejectBtn.style.position = 'absolute';
 
-    if(rejectCount >= 4){
-      // final state: only accept remains, fun message
-      rejectBtn.classList.add('hidden');
-      document.getElementById('askTitle').textContent = 'Hahaha 😆 you have no choice now 💕';
-      // slightly change accept button text
-      document.getElementById('acceptBtn').textContent = 'Ok OK I Accept 💕';
+        if(rejectCount >= 4){
+        // final state: only accept remains, fun message
+        rejectBtn.classList.add('hidden');
+        document.getElementById('askTitle').textContent = 'Hahaha 😆 you have no choice now 💕';
+        // slightly change accept button text
+        document.getElementById('acceptBtn').textContent = 'Ok OK I Accept 💕';
+        }
     }
-  }
 
-  // final accept: build calendar link, play song (attempt)
-  function finalAccept(){
-    // set calendar link
-    const start = '20251109T170000';
-    const end = '20251109T210000';
-    const text = encodeURIComponent("Birthday Date with You 💖");
-    const details = encodeURIComponent("Movie, aquarium and dinner at VivoCity — can't wait!");
-    const location = encodeURIComponent("VivoCity Singapore");
-    const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${start}/${end}&details=${details}&location=${location}`;
-    document.getElementById('calendarBtn').href = calendarUrl;
+    // final accept: build calendar link, play song (attempt)
+    function finalAccept(){
+        // set calendar link
+        const start = '20251109T170000';
+        const end = '20251109T210000';
+        const text = encodeURIComponent("Birthday Date with You 💖");
+        const details = encodeURIComponent("Movie, aquarium and dinner at VivoCity — can't wait!");
+        const location = encodeURIComponent("VivoCity Singapore");
+        const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${start}/${end}&details=${details}&location=${location}`;
+        document.getElementById('calendarBtn').href = calendarUrl;
 
-    // show final page
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('pageFinal').classList.add('active');
-
-    // final message: show selected subtly
-    const finalText = document.getElementById('finalText');
-    if(selected) finalText.textContent = `You chose "${selected}" — I think you'll look amazing. Can't wait! 💞`;
-    else finalText.textContent = `I can't wait to celebrate with you! 💞`;
-  }
-
-
-  // Keyboard navigation
-  document.addEventListener('keydown', (e) => {
-    if(e.key === 'ArrowRight') {
-      // next page mapping (safe)
-      const pages = ['page1','page2','page3','page4','page5','pageFinal'];
-      // find active
-      const active = Array.from(document.querySelectorAll('.page')).findIndex(p => p.classList.contains('active'));
-      if(active >=0 && active < pages.length-1) {
+        // show final page
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(pages[active+1]).classList.add('active');
-      }
+        document.getElementById('pageFinal').classList.add('active');
+
+        // final message: show selected subtly
+        const finalText = document.getElementById('finalText');
+        if(selected) finalText.textContent = `You chose "${selected}" — I think you'll look amazing. Can't wait! 💞`;
+        else finalText.textContent = `I can't wait to celebrate with you! 💞`;
     }
-  });
+
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if(e.key === 'ArrowRight') {
+        // next page mapping (safe)
+        const pages = ['page1','page2','page3','page4','page5','pageFinal'];
+        // find active
+        const active = Array.from(document.querySelectorAll('.page')).findIndex(p => p.classList.contains('active'));
+        if(active >=0 && active < pages.length-1) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pages[active+1]).classList.add('active');
+        }
+        }
+    });
 
   // init: show page1
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page1').classList.add('active');
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page1').classList.add('active');
 
-  // Expose some functions to global
-  window.show = function(n){
+    // Expose some functions to global
+    window.show = function(n){
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page'+n).classList.add('active');
-  };
-  window.chooseOption = chooseOption;
-  window.goConfirm = goConfirm;
-  window.rejectBehavior = rejectBehavior;
-  window.finalAccept = finalAccept;
-  window.toggleMusic = toggleMusic;
+    };
+    window.chooseOption = chooseOption;
+    window.goConfirm = goConfirm;
+    window.rejectBehavior = rejectBehavior;
+    window.finalAccept = finalAccept;
+
 </script>
 </body>
 </html>
