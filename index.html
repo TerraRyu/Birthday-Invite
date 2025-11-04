@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -8,545 +8,414 @@
 <style>
   :root{
     --bg:#fff0f6;
-    --card:#fff;
+    --card:#ffffff;
     --accent:#ff5fa8;
     --accent-2:#ff9ecf;
     --muted:#6b6b6b;
     --radius:16px;
   }
   *{box-sizing:border-box}
-  html,body{height:100%}
+  body,html{height:100%; margin:0; font-family: Inter, "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial; -webkit-font-smoothing:antialiased}
   body{
-    margin:0;
-    font-family: Inter, "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial;
     background: linear-gradient(180deg, #fff0f6 0%, #fff8fb 100%);
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    color:#222;
-    overflow:hidden;
+    display:flex; align-items:center; justify-content:center; padding:18px;
+    color:#222; overflow:hidden;
   }
-
-  /* Container */
-  .app{
-    position:relative;
-    width:100%;
-    height:100vh;
-    max-width:860px;
-    margin:0 auto;
-    padding:20px;
-  }
-
-  /* Card */
+  .wrap{ width:100%; max-width:900px; height:100%; display:flex; align-items:center; justify-content:center; }
   .card{
-    width:100%;
-    height:100%;
-    background:var(--card);
-    border-radius:var(--radius);
-    box-shadow: 0 10px 30px rgba(255,95,168,0.12);
-    padding:20px;
-    position:relative;
-    overflow:hidden;
+    width:100%; height:100%; max-height:920px; border-radius:18px; background:var(--card);
+    box-shadow:0 18px 50px rgba(255,95,168,0.12); padding:18px; position:relative; overflow:hidden;
+    display:flex; flex-direction:column;
   }
+  header{ display:flex; gap:12px; align-items:center; margin-bottom:8px; }
+  .logo{ width:56px; height:56px; border-radius:12px; background:linear-gradient(135deg,var(--accent),var(--accent-2)); display:flex; align-items:center; justify-content:center; color:white; font-weight:800; font-size:20px; box-shadow:0 8px 22px rgba(255,95,168,0.12) }
+  header h1{ margin:0; color:var(--accent); font-size:18px}
+  header p{ margin:0; color:var(--muted); font-size:13px; }
 
-  header{
-    display:flex;
-    gap:14px;
-    align-items:center;
-    margin-bottom:6px;
-  }
-  .logo{
-    width:56px;
-    height:56px;
-    border-radius:14px;
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:white;
-    font-weight:700;
-    font-size:20px;
-    box-shadow: 0 6px 20px rgba(255,95,168,0.18);
-  }
-  header h1{
-    margin:0;
-    font-size:18px;
-    color:var(--accent);
-  }
-  header p{margin:0;font-size:12px;color:var(--muted)}
+  /* Content area */
+  .content{ flex:1; display:flex; align-items:center; justify-content:center; position:relative; }
+  .page{ width:100%; max-width:820px; padding:14px; display:none; align-items:center; justify-content:center; flex-direction:column; text-align:center; gap:12px; }
+  .page.active{ display:flex; animation: fadeIn .4s ease both; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
 
-  /* Pages (stacked absolute for transitions) */
-  .page{
-    position:absolute;
-    inset:80px 20px 20px 20px;
-    background:transparent;
-    transition: transform 500ms cubic-bezier(.2,.9,.3,1), opacity 400ms;
-    transform:translateX(120%);
-    opacity:0;
-    padding:10px;
-    overflow:auto;
-    -webkit-overflow-scrolling:touch;
-  }
-  .page.active{ transform:translateX(0); opacity:1; }
-
-  /* Title & text */
-  .title{ font-size:22px; margin:8px 0; color:#ff3b86; font-weight:700; }
-  .lead{ font-size:15px; color:#333; margin-bottom:14px; }
+  .title{ font-size:22px; font-weight:700; color:#ff3b86 }
+  .lead{ font-size:15px; color:#333; max-width:760px }
 
   /* Buttons */
-  .row{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; justify-content:center; margin-top:12px; }
-  .btn{
-    background:var(--accent);
-    color:white;
-    border:none;
-    padding:12px 18px;
-    border-radius:12px;
-    font-weight:600;
-    cursor:pointer;
-    box-shadow: 0 8px 18px rgba(255,95,168,0.12);
-    transition: transform .12s, background .12s;
-  }
-  .btn:hover{ transform:translateY(-3px); }
-  .btn.secondary{ background:#fff; color:var(--accent); border:2px solid #ffd3e8; box-shadow:none; }
-  .small{ padding:8px 12px; border-radius:10px; font-size:14px; }
+  .row{ display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap; margin-top:12px }
+  .btn{ background:var(--accent); color:white; border:none; padding:12px 18px; border-radius:12px; font-weight:700; cursor:pointer; box-shadow:0 8px 18px rgba(255,95,168,0.14); transition:transform .12s ease }
+  .btn:hover{ transform:translateY(-3px) }
+  .btn.secondary{ background:#fff; color:var(--accent); border:2px solid #ffd3e8; box-shadow:none }
+  .small{ padding:8px 12px; border-radius:10px }
 
-  /* GIFs */
-  .gif{ max-width:220px; border-radius:12px; box-shadow: 0 8px 18px rgba(0,0,0,0.06); display:block; margin:10px auto; }
+  /* gif */
+  .gif{ width:220px; max-width:60%; border-radius:12px; display:block; margin:6px auto; box-shadow:0 10px 28px rgba(0,0,0,0.06) }
 
-  /* Dress options */
-  .grid{ display:flex; gap:14px; justify-content:center; align-items:flex-start; flex-wrap:wrap; margin-top:8px; }
-  .card-option{
-    width:130px; background:linear-gradient(180deg,#fff,#fff); border-radius:12px; padding:8px; text-align:center; cursor:pointer;
-    border:2px solid transparent; transition: transform .14s, box-shadow .14s, border .14s;
-  }
-  .card-option img{ width:100%; height:170px; object-fit:cover; border-radius:8px; display:block; }
-  .card-option:hover{ transform:translateY(-6px); border-color:#ffd3e8; box-shadow: 0 12px 28px rgba(255,95,168,0.08); }
-  .card-option .opt-title{ margin-top:8px; font-weight:600; color:#ff4d87; font-size:14px; }
+  /* Dress grid */
+  .grid{ display:flex; gap:14px; justify-content:center; align-items:flex-start; flex-wrap:wrap; margin-top:6px }
+  .card-option{ width:150px; border-radius:12px; padding:8px; text-align:center; cursor:pointer; background:linear-gradient(180deg,#fff,#fff); border:2px solid transparent; transition:transform .12s, box-shadow .12s, border .12s; position:relative }
+  .card-option img{ width:100%; height:190px; object-fit:cover; border-radius:10px; display:block }
+  .card-option .opt-title{ margin-top:8px; font-weight:700; color:#ff4d87 }
+  .card-option.selected{ border-color:#ffd3e8; box-shadow:0 16px 40px rgba(255,95,168,0.08); transform:translateY(-6px) }
+  .heart-badge{ position:absolute; top:10px; right:10px; width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#ff5fa8,#ff9ecf); display:flex; align-items:center; justify-content:center; color:white; font-weight:800; box-shadow:0 6px 18px rgba(255,95,168,0.18); opacity:0; transform:scale(.6); transition:all .18s }
+  .card-option.selected .heart-badge{ opacity:1; transform:scale(1) }
 
   /* Accept/Reject area */
-  .accept-area{ display:flex; gap:16px; align-items:center; justify-content:center; margin-top:12px; position:relative; min-height:120px; }
+  .accept-area{ width:100%; max-width:720px; min-height:150px; display:flex; align-items:center; justify-content:center; position:relative; margin-top:12px }
+  #rejectBtn{ position:absolute; right:64px; bottom:18px; background:#fff; color:#ff416c; border:2px solid #ffd3e8; padding:10px 14px; border-radius:999px; cursor:pointer; font-weight:800; transition:all 180ms ease }
+  #rejectBtn.hidden{ display:none }
+  #acceptBtn{ z-index:5 }
 
-  /* Reject button will be positioned absolute inside .accept-area */
-  .reject-btn{
-    position:absolute;
-    right:20px;
-    bottom:18px;
-    background:#fff;
-    color:#ff416c;
-    border:2px solid #ffd3e8;
-    padding:12px 18px;
-    border-radius:999px;
-    cursor:pointer;
-    transition:all 200ms ease;
-    font-weight:700;
-  }
+  /* final references */
+  .refs{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:10px }
+  .ref-img{ width:140px; height:150px; object-fit:cover; border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,0.06) }
 
-  /* Final placeholder image */
+  /* photo placeholder for backend to replace (no upload UI) */
   .photo-placeholder{
-    margin:12px auto;
-    width:220px; height:220px; border-radius:14px;
-    background:linear-gradient(180deg,#fff6fb,#fff); border:2px dashed #ffdce7;
-    display:flex; align-items:center; justify-content:center; color:#ff6ea0; font-weight:700; font-size:14px;
-    box-shadow: 0 10px 28px rgba(255,95,168,0.06);
+    width:260px; height:260px; border-radius:14px; border:2px dashed #ffdce7; display:flex; align-items:center; justify-content:center; color:#ff6ea0; font-weight:700; background:linear-gradient(180deg,#fff6fb,#fff);
+    margin:12px auto; box-shadow:0 10px 28px rgba(255,95,168,0.06)
   }
-  .photo-preview{ width:220px; height:220px; object-fit:cover; border-radius:14px; display:block; margin:8px auto; }
 
   /* small text */
-  .muted{ font-size:13px; color:var(--muted); margin-top:6px; text-align:center; }
+  .muted{ font-size:13px; color:var(--muted) }
+
+  /* music toggles */
+  .music-toggle{ position:absolute; top:18px; right:18px; display:flex; gap:8px; align-items:center }
 
   /* responsive */
-  @media (max-width:520px){
-    .card-option{ width:42%; }
-    .page{ inset:90px 10px 10px 10px; }
-    header h1{ font-size:16px; }
+  @media (max-width:620px){
+    .card-option{ width:44% }
+    .ref-img{ width:40%; height:120px }
+    .gif{ width:170px }
+    .photo-placeholder{ width:86%; height:220px }
   }
 </style>
 </head>
 <body>
-<div class="app">
+<div class="wrap">
   <div class="card" role="main">
+
     <header>
       <div class="logo">💕</div>
       <div>
         <h1>Birthday Invite — Nov 9</h1>
-        <p>Tap through for surprises 🌸</p>
+        <p>Interactive invite — open this link on your phone 💞</p>
+      </div>
+
+      <!-- music controls -->
+      <div class="music-toggle" title="Background music">
+        <button id="musicToggle" class="btn small secondary" onclick="toggleMusic()">Play music</button>
+        <a id="youtubeSong" href="https://www.youtube.com/watch?v=R5jH2b7K2Gk" target="_blank" rel="noreferrer" class="btn small">Open song (YouTube)</a>
       </div>
     </header>
 
-    <!-- Page 1: Intro -->
-    <section id="page-1" class="page active" aria-hidden="false">
-      <div class="title">Hey love 💖</div>
-      <div class="lead">I planned a little birthday date for you. Will you join me for a special day? (Hint: there are surprises!)</div>
-      <img class="gif" src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" alt="cute heart gif">
-      <div class="row">
-        <button class="btn" onclick="goTo(2)">Continue 💕</button>
-      </div>
-      <div class="muted">Swipe or use Continue to move forward — mobile friendly ✨</div>
-    </section>
+    <div class="content">
+      <!-- Page 1 -->
+      <section id="page1" class="page active" aria-hidden="false">
+        <div class="title">Hey love 💖</div>
+        <div class="lead">I planned a little birthday date for you. Will you join me for a special day? (There are surprises!)</div>
+        <img class="gif" src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" alt="hearts gif">
+        <div class="row"><button class="btn" onclick="show(2)">Continue 💕</button></div>
+        <div class="muted">Tap Continue to see the plan — mobile friendly ✨</div>
+      </section>
 
-    <!-- Page 2: Date & Location -->
-    <section id="page-2" class="page" aria-hidden="true">
-      <div class="title">When & Where 📍</div>
-      <div class="lead">📅 <strong>9 November 2025</strong> — meet at <strong>VivoCity</strong></div>
-      <img class="gif" src="https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif" alt="map gif">
-      <div style="text-align:center; margin-top:8px;">
-        <a class="btn secondary" href="https://goo.gl/maps/5jLZ2q8zJkF2" target="_blank" rel="noreferrer">Open directions in Google Maps</a>
-      </div>
-      <!-- Optional embed (works if you add API key) -->
-      <div style="margin-top:10px; display:flex; justify-content:center;">
-        <iframe
+      <!-- Page 2 -->
+      <section id="page2" class="page" aria-hidden="true">
+        <div class="title">When & Where 📍</div>
+        <div class="lead">📅 <strong>9 November 2025</strong> — meet at <strong>VivoCity</strong></div>
+        <img class="gif" src="https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif" alt="map gif">
+        <div class="row">
+          <a class="btn secondary" href="https://www.google.com/maps/dir/D'Nest,+127-149+Pasir+Ris+Grove,+Singapore+518133/1+HarbourFront+Walk,+VivoCity,+Singapore+098585/@1.3305545,103.8275456,13z/data=!3m2!4b1!5s0x31da19589a627ead:0xfd38f5ecc34d6960!4m14!4m13!1m5!1m1!1s0x31da3da423e4652b:0xe79ba2bd94482865!2m2!1d103.9463084!2d1.370281!1m5!1m1!1s0x31da1958974bbc2b:0xba34578f519df13f!2m2!1d103.8231658!2d1.2647139!3e3?entry=ttu&g_ep=EgoyMDI1MTEwMi4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noreferrer">Open directions</a>
+          <button class="btn" onclick="show(3)">Next</button>
+        </div>
+        <!-- Optional iframe if you add api key -->
+        <div style="margin-top:12px; width:100%; display:flex; justify-content:center">
+          <iframe
             src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d63819.8806366818!2d103.84736500155368!3d1.330554515090712!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e3!4m5!1s0x31da3da423e4652b%3A0xe79ba2bd94482865!2sPasir%20Ris%20Grove%2C%20D&#39;Nest%2C%20Singapore!3m2!1d1.3702809999999999!2d103.94630839999999!4m5!1s0x31da1958974bbc2b%3A0xba34578f519df13f!2s1%20HarbourFront%20Walk%2C%20VivoCity%2C%20Singapore%20098585!3m2!1d1.2647138999999998!2d103.8231658!5e0!3m2!1sen!2ssg!4v1762245046676!5m2!1sen!2ssg" 
             width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
         </iframe>
-      </div>
-      <div class="row">
-        <button class="btn secondary small" onclick="goTo(1)">Back</button>
-        <button class="btn" onclick="goTo(3)">Pick an Outfit 👗</button>
-      </div>
-    </section>
+        </div>
+      </section>
 
-    <!-- Page 3: Dress Selection -->
-    <section id="page-3" class="page" aria-hidden="true">
-      <div class="title">Pick our vibe — what should you wear?</div>
-      <div class="lead">Tap an outfit you like. Don’t worry — you’ll look gorgeous in anything 💕</div>
-      <div class="grid" role="list">
-        <!-- Dressy Chic -->
-        <div class="card-option" role="listitem" onclick="selectOutfit('Dressy Chic')">
-          <img src="https://images.unsplash.com/photo-1520962911098-0f6c8d0f3f28?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=9c9a2d6a0f2c6c8b2a5d8b3e5a2c4d6e" alt="Dressy Chic">
-          <div class="opt-title">Dressy Chic</div>
+      <!-- Page 3: outfit -->
+      <section id="page3" class="page" aria-hidden="true">
+        <div class="title">Pick an outfit vibe 💃</div>
+        <div class="lead">Tap a style — I’ll show a few real references for your pick</div>
+        <div class="grid">
+          <div class="card-option" data-name="Dressy Chic" onclick="chooseOption(this)">
+            <div class="heart-badge">💖</div>
+            <img src="https://images.unsplash.com/photo-1520975918996-1bd7b0c0d9b3?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=9f5f7c9c2f6d4b4b5a9f6a2d6ceb3a77" alt="Dressy Chic">
+            <div class="opt-title">Dressy Chic</div>
+          </div>
+
+          <div class="card-option" data-name="Semi-Casual Cute" onclick="chooseOption(this)">
+            <div class="heart-badge">💖</div>
+            <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=8a9b6dfa8b0d6b7e9f2f4f6c8b1ded46" alt="Semi Casual">
+            <div class="opt-title">Semi-Casual Cute</div>
+          </div>
+
+          <div class="card-option" data-name="Cozy Casual" onclick="chooseOption(this)">
+            <div class="heart-badge">💖</div>
+            <img src="https://images.unsplash.com/photo-1514996937319-344454492b37?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=2b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e" alt="Cozy Casual">
+            <div class="opt-title">Cozy Casual</div>
+          </div>
         </div>
 
-        <!-- Semi-Casual Cute -->
-        <div class="card-option" role="listitem" onclick="selectOutfit('Semi-Casual Cute')">
-          <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=8a9b6dfa8b0d6b7e9f2f4f6c8b1ded46" alt="Semi Casual">
-          <div class="opt-title">Semi-Casual Cute</div>
+        <img class="gif" src="https://media.giphy.com/media/3o6Zt2sANz0R4mVqXe/giphy.gif" alt="outfit gif" style="margin-top:12px">
+        <div class="row">
+          <button class="btn secondary small" onclick="show(2)">Back</button>
+          <button class="btn" onclick="goConfirm()">See references</button>
+        </div>
+      </section>
+
+      <!-- Page 4: Confirm references of selected outfit -->
+      <section id="page4" class="page" aria-hidden="true">
+        <div class="title">Lovely choice ✨</div>
+        <div class="lead" id="confirmLead">Here are some outfit references — pick the vibe you like!</div>
+
+        <div class="refs" id="refsContainer">
+          <!-- reference images injected here -->
         </div>
 
-        <!-- Cozy Casual -->
-        <div class="card-option" role="listitem" onclick="selectOutfit('Cozy Casual')">
-          <img src="https://images.unsplash.com/photo-1514996937319-344454492b37?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=2b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e" alt="Cozy Casual">
-          <div class="opt-title">Cozy Casual</div>
+        <img class="gif" id="refGif" src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" alt="cute reference gif" style="margin-top:10px">
+
+        <div class="row">
+          <button class="btn secondary small" onclick="show(3)">Back</button>
+          <button class="btn" onclick="show(5)">Accept or Reject</button>
         </div>
-      </div>
+      </section>
 
-      <img class="gif" src="https://media.giphy.com/media/3o6Zt2sANz0R4mVqXe/giphy.gif" alt="cute outfit gif" style="margin-top:12px">
-      <div class="row">
-        <button class="btn secondary small" onclick="goTo(2)">Back</button>
-        <button class="btn" onclick="goTo(4)">I picked — Next</button>
-      </div>
-    </section>
+      <!-- Page 5: Accept / Reject -->
+      <section id="page5" class="page" aria-hidden="true">
+        <div class="title" id="askTitle">Will you come on this date? 🥺</div>
+        <div class="lead" id="askLead">I'd be so happy if you said yes 💕</div>
 
-    <!-- Page 4: Accept/Reject -->
-    <section id="page-4" class="page" aria-hidden="true">
-      <div class="title">Do you accept this date mission? ❤️</div>
-      <div class="lead">I really hope you say yes — but it's your choice 💕</div>
+        <img class="gif" src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="please gif">
 
-      <img class="gif" src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="please gif">
+        <div class="accept-area" id="acceptArea">
+          <button id="acceptBtn" class="btn" onclick="finalAccept()">Accept 💖</button>
+          <button id="rejectBtn" onclick="rejectBehavior()">Reject 💔</button>
+        </div>
 
-      <div class="accept-area">
-        <button id="acceptBtn" class="btn" onclick="handleAccept()">Accept 💖</button>
+        <div class="row">
+          <button class="btn secondary small" onclick="show(4)">Back</button>
+        </div>
+      </section>
 
-        <!-- reject button positioned absolutely inside accept-area; JS will move it -->
-        <button id="rejectBtn" class="reject-btn" onclick="handleRejectClick()">Reject 💔</button>
-      </div>
+      <!-- Final Page -->
+      <section id="pageFinal" class="page" aria-hidden="true">
+        <div class="title">Yay — you said yes! 🥳</div>
+        <div class="lead" id="finalText">I’m so excited — can’t wait to celebrate with you 💞</div>
 
-      <div class="muted">Hint: click Reject if you’re feeling dramatic 😉</div>
-      <div class="row">
-        <button class="btn secondary small" onclick="goTo(3)">Back</button>
-      </div>
-    </section>
+        <img class="gif" src="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif" alt="celebration gif">
 
-    <!-- Reject Page (we reuse same card but change question) -->
-    <section id="reject-loop" class="page" aria-hidden="true">
-      <div class="title" id="rejectQuestion">Are you sure?</div>
-      <div class="lead">Think it over — but I may keep asking... 😇</div>
+        <div class="row" style="margin-top:8px">
+          <a id="calendarBtn" class="btn" href="#" target="_blank" rel="noreferrer">Add to Google Calendar</a>
+          <a class="btn secondary" href="https://goo.gl/maps/5jLZ2q8zJkF2" target="_blank" rel="noreferrer">Open Map</a>
+        </div>
 
-      <img class="gif" src="https://media.giphy.com/media/26n6WywJyh39n1pBu/giphy.gif" alt="pleading gif">
+        <div style="margin-top:12px; text-align:center;">
+          <!-- Backend placeholder: replace this element on your server with the final image -->
+          <div id="backendPhotoPlaceholder" class="photo-placeholder">[ Your final photo will appear here ]</div>
+          <div class="muted">(This placeholder is meant for your backend to replace with the final image.)</div>
+        </div>
 
-      <div class="row" style="margin-top:18px;">
-        <button id="rejectLoopBtn" class="btn secondary small" onclick="rejectLoopNext()">Yes</button>
-        <button class="btn" onclick="handleAccept()">Accept 💖</button>
-      </div>
-      <div class="muted">You can accept anytime — I promise it'll be fun! 🎈</div>
-    </section>
+        <div class="row" style="margin-top:12px;">
+          <button class="btn secondary small" onclick="show(1)">Start Over</button>
+        </div>
+      </section>
 
-    <!-- Final Page -->
-    <section id="page-final" class="page" aria-hidden="true">
-      <div class="title">Yay — you said yes! 🥳</div>
-      <div class="lead">I’m so happy! Here’s what you selected: <strong id="finalChoice">—</strong></div>
-
-      <img class="gif" src="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif" alt="celebration gif">
-
-      <div style="text-align:center; margin-top:12px;">
-        <a id="calendarAdd" class="btn" href="#" target="_blank" rel="noreferrer">Add to Google Calendar</a>
-        <a class="btn secondary" href="https://goo.gl/maps/5jLZ2q8zJkF2" target="_blank" rel="noreferrer">Open Map</a>
-      </div>
-
-      <div style="margin-top:18px; text-align:center;">
-        <div class="photo-placeholder" id="photoPlaceholder">Your photo goes here 💫</div>
-        <input id="photoInput" type="file" accept="image/*" style="margin-top:10px;">
-        <div class="muted">Upload a picture to preview here (for you to replace later)</div>
-      </div>
-
-      <div class="row" style="margin-top:16px;">
-        <button class="btn secondary small" onclick="goTo(1)">Start Over</button>
-      </div>
-    </section>
-
+    </div>
   </div>
 </div>
 
+<!-- background audio (optional) -->
+<audio id="bgAudio" loop preload="none">
+  <!-- You can replace audioSrc with a direct mp3 URL you host that is the original Pointer Sisters track.
+       For copyright reasons, the file is not included here. -->
+  <!-- Example (replace with your own hosted MP3): -->
+  <!-- <source src="https://example.com/im-so-excited.mp3" type="audio/mpeg"> -->
+Your browser does not support the audio element.
+</audio>
+
 <script>
-  // State
-  let selectedOutfit = null;
-  let currentPage = 1;
-  const totalPages = 5; // pages are 1..5 (final is 5)
-  // Reject loop state
-  let rejectCount = 0; // how many times clicked
-  // To avoid accepting when reject loop forced, we'll show only accept after 4 rejects
+  // --- state & helpers
+  let selected = null;
+  const refs = {
+    "Dressy Chic": [
+      "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=7d4f5c2b5c9b8e3d3b7a6b8c9d0e1f2a",
+      "https://images.unsplash.com/photo-1520975918996-1bd7b0c0d9b3?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=9f5f7c9c2f6d4b4b5a9f6a2d6ceb3a77",
+      "https://images.unsplash.com/photo-1495121605193-b116b5b09f6b?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=3f7d3d9d9e7b0e6a5f3c7a1b2c4d6e8f"
+    ],
+    "Semi-Casual Cute": [
+      "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=8a9b6dfa8b0d6b7e9f2f4f6c8b1ded46",
+      "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=c7d3b6a9f1e2b3a4c5d6e7f8a9b0c1d2",
+      "https://images.unsplash.com/photo-1520975698510-9fb0f9e8b3f0?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=7e7f0d1d8b6f9f6e2e2f3b6a1a1a7a6b"
+    ],
+    "Cozy Casual": [
+      "https://images.unsplash.com/photo-1514996937319-344454492b37?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=2b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e",
+      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=1a2b3c4d5e6f7890a1b2c3d4e5f6a7b8",
+      "https://images.unsplash.com/photo-1520975105800-3f8c0f7f7d1f?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d"
+    ]
+  };
 
-  // Page helper
-  function showPage(idNum){
-    // hide all pages
-    document.querySelectorAll('.page').forEach(p => {
-      p.classList.remove('active');
-      p.setAttribute('aria-hidden','true');
-    });
-    // special mapping: final index 5 -> page-final
-    let el = null;
-    switch(idNum){
-      case 1: el = document.getElementById('page-1'); break;
-      case 2: el = document.getElementById('page-2'); break;
-      case 3: el = document.getElementById('page-3'); break;
-      case 4: el = document.getElementById('page-4'); break;
-      case 5: el = document.getElementById('page-final'); break;
-      default: el = document.getElementById('page-1');
+  // Page show/hide
+  function show(n){
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page' + n).classList.add('active');
+    // update current id (for keyboard nav etc)
+  }
+
+  // choose outfit: this runs when clicking a card
+  function chooseOption(el){
+    // de-select others
+    document.querySelectorAll('.card-option').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selected = el.getAttribute('data-name');
+    // update the confirm lead to show the selection succinctly
+    document.getElementById('confirmLead').textContent = `You selected: ${selected}. Here are a few outfit references:`;
+    // visual tiny pulse
+    el.animate([{ transform: 'scale(1.02)' }, { transform: 'scale(1)' }], { duration: 200 });
+  }
+
+  // go show references: populate ref images based on selected
+  function goConfirm(){
+    if(!selected){
+      // if none selected, still proceed but show generic refs (we'll default to Dressy Chic)
+      selected = 'Dressy Chic';
     }
-    if(el){
-      el.classList.add('active');
-      el.setAttribute('aria-hidden','false');
-    }
-    currentPage = idNum;
-  }
-
-  function goTo(n){
-    // show page n with small debounce
-    showPage(n);
-  }
-
-  // Outfit selection
-  function selectOutfit(name){
-    selectedOutfit = name;
-    // show a little confirmation and keep user on the page
-    document.getElementById('finalChoice').textContent = selectedOutfit;
-    // soft highlight chosen option (visual feedback)
-    document.querySelectorAll('.card-option').forEach(c => {
-      c.style.opacity = (c.textContent.includes(name) ? '1' : '0.9');
+    const refsEl = document.getElementById('refsContainer');
+    refsEl.innerHTML = '';
+    (refs[selected] || refs['Dressy Chic']).forEach(url => {
+      const img = document.createElement('img');
+      img.src = url;
+      img.className = 'ref-img';
+      refsEl.appendChild(img);
     });
-    // small confetti-ish flash (temporary)
-    const old = document.body.style.background;
-    document.body.style.background = 'linear-gradient(180deg,#fff0f6,#fff2f9)';
-    setTimeout(()=> document.body.style.background = old, 300);
+    // change reference gif depending on selection (cute mix)
+    const refGif = document.getElementById('refGif');
+    refGif.src = (selected === 'Cozy Casual') ? 'https://media.giphy.com/media/3o6Mbl0fbf4b9vK6O0/giphy.gif' : 'https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif';
+    // show page 4
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page4').classList.add('active');
   }
 
-  // Accept flow
-  function handleAccept(){
-    // Fill calendar link (Google Calendar)
+  // Reject behavior: shrinking & random moving; max 4 rejects
+  let rejectCount = 0;
+  const rejectBtn = document.getElementById('rejectBtn');
+  function rejectBehavior(){
+    rejectCount++;
+    // build "very" string
+    let verys = '';
+    for(let i=0;i<rejectCount;i++) verys += 'very ';
+    document.getElementById('askTitle').textContent = `Are you ${verys}sure?`;
+    // shrink button progressively
+    const scale = Math.max(0.45, 1 - 0.16 * rejectCount);
+    rejectBtn.style.transform = `scale(${scale})`;
+    // random move inside acceptArea
+    const area = document.getElementById('acceptArea');
+    const rect = area.getBoundingClientRect();
+    const btnW = Math.max(80, rejectBtn.offsetWidth);
+    const btnH = Math.max(30, rejectBtn.offsetHeight);
+    const pad = 8;
+    const x = Math.random() * (rect.width - btnW - pad) + pad;
+    const y = Math.random() * (rect.height - btnH - pad) + pad;
+    rejectBtn.style.left = x + 'px';
+    rejectBtn.style.top = y + 'px';
+    rejectBtn.style.position = 'absolute';
+
+    if(rejectCount >= 4){
+      // final state: only accept remains, fun message
+      rejectBtn.classList.add('hidden');
+      document.getElementById('askTitle').textContent = 'Hahaha 😆 you have no choice now 💕';
+      // slightly change accept button text
+      document.getElementById('acceptBtn').textContent = 'Ok OK I Accept 💕';
+    }
+  }
+
+  // final accept: build calendar link, play song (attempt)
+  function finalAccept(){
+    // set calendar link
     const start = '20251109T170000';
     const end = '20251109T210000';
     const text = encodeURIComponent("Birthday Date with You 💖");
-    const details = encodeURIComponent("Movie, aquarium and dinner at VivoCity. Can't wait!");
+    const details = encodeURIComponent("Movie, aquarium and dinner at VivoCity — can't wait!");
     const location = encodeURIComponent("VivoCity Singapore");
-    const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${start}/${end}&details=${details}&location=${location}`;
-    document.getElementById('calendarAdd').href = url;
+    const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${start}/${end}&details=${details}&location=${location}`;
+    document.getElementById('calendarBtn').href = calendarUrl;
 
-    // move to final page
-    showPage(5);
-  }
+    // play bg audio if available
+    try {
+      const audio = document.getElementById('bgAudio');
+      // if audio source is present, play; else open youtube (or rely on user to click Play)
+      if(audio.querySelector('source')){
+        audio.play().catch(()=>{/* autoplay may be blocked */});
+      } else {
+        // no local audio file is provided (copyright); show YouTube hint (we already have link)
+        // nothing forced — user can open via "Open song (YouTube)" or click Play music toggle
+      }
+    } catch(e){ console.warn(e) }
 
-  // Reject logic (the floating shrinking button)
-  const rejectBtn = document.getElementById('rejectBtn');
-  const acceptBtn = document.getElementById('acceptBtn');
-
-  // initialize position inside accept-area
-  function resetRejectButton(){
-    // place somewhat bottom-right by default
-    rejectBtn.style.width = 'auto';
-    rejectBtn.style.transform = 'scale(1)';
-    rejectBtn.style.right = '20px';
-    rejectBtn.style.bottom = '18px';
-    rejectBtn.style.left = 'auto';
-    rejectBtn.style.top = 'auto';
-    rejectBtn.style.fontSize = '';
-  }
-  resetRejectButton();
-
-  function handleRejectClick(){
-    // increment and run behavior
-    rejectCount++;
-    // update question text by adding "very" per reject
-    const q = document.getElementById('rejectQuestion');
-    // build string: base "Are you " + ("very " repeated rejectCount times) + "sure?"
-    let verys = '';
-    for(let i=0;i<rejectCount;i++) verys += 'very ';
-    q.textContent = `Are you ${verys}sure?`;
-
-    // shrink the reject button progressively
-    const shrinkFactor = Math.max(0.45, 1 - 0.13 * rejectCount); // don't go below 0.45
-    rejectBtn.style.transform = `scale(${shrinkFactor})`;
-    rejectBtn.style.fontSize = `${Math.max(12, 16 - rejectCount)}px`;
-
-    // move to a random position inside accept-area bounds
-    const area = document.querySelector('.accept-area');
-    const rect = area.getBoundingClientRect();
-    // compute random coords within area
-    const btnWidth = rejectBtn.getBoundingClientRect().width || 110;
-    const btnHeight = rejectBtn.getBoundingClientRect().height || 40;
-    const pad = 12;
-    const minX = rect.left + pad;
-    const maxX = rect.right - btnWidth - pad;
-    const minY = rect.top + pad;
-    const maxY = rect.bottom - btnHeight - pad;
-
-    // convert to positions relative to accept-area
-    const randX = Math.random() * (Math.max(0, maxX - minX)) + minX;
-    const randY = Math.random() * (Math.max(0, maxY - minY)) + minY;
-
-    // set absolute position relative to accept-area's offset parent
-    const parentRect = area.getBoundingClientRect();
-    const relLeft = randX - parentRect.left;
-    const relTop = randY - parentRect.top;
-    rejectBtn.style.position = 'absolute';
-    rejectBtn.style.left = relLeft + 'px';
-    rejectBtn.style.top = relTop + 'px';
-    rejectBtn.style.right = 'auto';
-    rejectBtn.style.bottom = 'auto';
-
-    // after moving, show reject-loop confirmation page if not reached max
-    if(rejectCount < 4){
-      // show reject loop screen for playful questions
-      showRejectLoop();
-    } else {
-      // Max rejects reached -> force only accept available
-      // Hide reject button and show accept-only state
-      rejectBtn.style.display = 'none';
-      // change accept button label playful
-      acceptBtn.textContent = 'Okay... Fine — Accept 💕';
-      // make final question super pushy
-      const q2 = document.getElementById('rejectQuestion');
-      q2.textContent = 'Too many tries! You have no choice — accept 💘';
-      showRejectLoop();
-    }
-  }
-
-  // Show reject loop section (page)
-  function showRejectLoop(){
-    // show section that asks again but with Accept option and small Yes (keeps looping)
+    // show final page
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    const rl = document.getElementById('reject-loop');
-    rl.classList.add('active');
+    document.getElementById('pageFinal').classList.add('active');
+
+    // final message: show selected subtly
+    const finalText = document.getElementById('finalText');
+    if(selected) finalText.textContent = `You chose "${selected}" — I think you'll look amazing. Can't wait! 💞`;
+    else finalText.textContent = `I can't wait to celebrate with you! 💞`;
   }
 
-  // Called when user clicks "Yes" (the small button) on reject-loop page
-  function rejectLoopNext(){
-    // increment rejectCount as another yes (they confirmed rejection)
-    rejectCount++;
-    // If they reached limit, force accept:
-    if(rejectCount >= 4){
-      // hide reject UI and accept
-      rejectBtn.style.display = 'none';
-      handleAccept();
-      return;
+  // Music toggle: attempt to play audio element if a source is set; otherwise open YouTube on request
+  const audioEl = document.getElementById('bgAudio');
+  let musicPlaying = false;
+  function toggleMusic(){
+    // if audio element has source(s), toggle play/pause
+    if(audioEl.querySelector('source')){
+      if(!musicPlaying){
+        audioEl.play().catch(()=>{ alert('Autoplay blocked — please tap Play on your device'); });
+        musicPlaying = true;
+        document.getElementById('musicToggle').textContent = 'Pause music';
+      } else {
+        audioEl.pause();
+        musicPlaying = false;
+        document.getElementById('musicToggle').textContent = 'Play music';
+      }
+    } else {
+      // fallback: open youtube link in new tab (user can play original there)
+      const open = confirm('No embedded audio provided for copyright reasons. Open the song on YouTube?');
+      if(open) window.open(document.getElementById('youtubeSong').href, '_blank');
     }
-    // update question text and shrink/move reject button further
-    const q = document.getElementById('rejectQuestion');
-    let verys = '';
-    for(let i=0;i<rejectCount;i++) verys += 'very ';
-    q.textContent = `Are you ${verys}sure?`;
-
-    // shrink further by adjusting style
-    const shrinkFactor = Math.max(0.45, 1 - 0.13 * rejectCount);
-    rejectBtn.style.transform = `scale(${shrinkFactor})`;
-    rejectBtn.style.fontSize = `${Math.max(11, 16 - rejectCount)}px`;
-
-    // random move
-    const area = document.querySelector('.accept-area');
-    const rect = area.getBoundingClientRect();
-    const btnWidth = rejectBtn.getBoundingClientRect().width || 100;
-    const btnHeight = rejectBtn.getBoundingClientRect().height || 36;
-    const pad = 8;
-    const minX = rect.left + pad;
-    const maxX = rect.right - btnWidth - pad;
-    const minY = rect.top + pad;
-    const maxY = rect.bottom - btnHeight - pad;
-    const randX = Math.random() * (Math.max(0, maxX - minX)) + minX;
-    const randY = Math.random() * (Math.max(0, maxY - minY)) + minY;
-    const parentRect = area.getBoundingClientRect();
-    const relLeft = randX - parentRect.left;
-    const relTop = randY - parentRect.top;
-    rejectBtn.style.position = 'absolute';
-    rejectBtn.style.left = relLeft + 'px';
-    rejectBtn.style.top = relTop + 'px';
-
-    // after updating, return to accept page so they can try again
-    showPage(4);
   }
 
-  // Photo upload preview
-  const photoInput = document.getElementById('photoInput');
-  photoInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if(!file) return;
-    const url = URL.createObjectURL(file);
-    // replace placeholder with image preview
-    const placeholder = document.getElementById('photoPlaceholder');
-    const img = document.createElement('img');
-    img.src = url;
-    img.className = 'photo-preview';
-    placeholder.replaceWith(img);
-  });
-
-  // Small keyboard / swipe support: left/right arrows to navigate
+  // Keyboard navigation
   document.addEventListener('keydown', (e) => {
-    if(e.key === 'ArrowRight'){
-      if(currentPage < 5) goTo(currentPage+1);
-    } else if(e.key === 'ArrowLeft'){
-      if(currentPage > 1) goTo(currentPage-1);
-    }
-  });
-
-  // Initialize: show page 1
-  showPage(1);
-
-  // Convenience: if user goes to page 4 (accept/reject), reset reject btn
-  const observer = new MutationObserver(() => {
-    // when the accept page becomes visible, reset reject position if needed
-    const p4 = document.getElementById('page-4');
-    if(p4.classList.contains('active')){
-      // show reject button again if was hidden but rejects <4
-      if(rejectCount < 4){
-        rejectBtn.style.display = 'block';
+    if(e.key === 'ArrowRight') {
+      // next page mapping (safe)
+      const pages = ['page1','page2','page3','page4','page5','pageFinal'];
+      // find active
+      const active = Array.from(document.querySelectorAll('.page')).findIndex(p => p.classList.contains('active'));
+      if(active >=0 && active < pages.length-1) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pages[active+1]).classList.add('active');
       }
     }
   });
-  observer.observe(document.querySelector('.card'), { attributes: false, childList: true, subtree: true });
 
-  // For accessibility: clicking Accept on final page will also prompt calendar
-  document.getElementById('calendarAdd').addEventListener('click', () => {
-    // nothing extra needed; link already set when accept called
-  });
+  // init: show page1
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page1').classList.add('active');
 
-  // Expose some functions to global for HTML onclick
-  window.goTo = goTo;
-  window.selectOutfit = function(name){
-    selectOutfit(name);
-    // set final choice badge
-    document.getElementById('finalChoice').textContent = name;
+  // Expose some functions to global
+  window.show = function(n){
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page'+n).classList.add('active');
   };
-  window.handleAccept = handleAccept;
-  window.handleRejectClick = handleRejectClick;
-  window.rejectLoopNext = rejectLoopNext;
-
+  window.chooseOption = chooseOption;
+  window.goConfirm = goConfirm;
+  window.rejectBehavior = rejectBehavior;
+  window.finalAccept = finalAccept;
+  window.toggleMusic = toggleMusic;
 </script>
 </body>
 </html>
-
