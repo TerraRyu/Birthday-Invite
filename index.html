@@ -1,237 +1,551 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Birthday Invitation 💖</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Birthday Date Invite 💖</title>
+<link rel="icon" href="data:,">
 <style>
-    body {
-        font-family: 'Segoe UI', sans-serif;
-        margin: 0;
-        padding: 0;
-        background: #ffe6f0;
-        color: #333;
-        text-align: center;
-        overflow-x: hidden;
-        position: relative;
-    }
-    .page {
-        display: none;
-        padding: 20px;
-        min-height: 100vh;
-        box-sizing: border-box;
-        opacity: 0;
-        transform: translateX(100%);
-        transition: all 0.5s ease;
-        position: absolute;
-        width: 100%;
-        left: 0;
-        top: 0;
-    }
-    .page.active {
-        display: block;
-        opacity: 1;
-        transform: translateX(0);
-    }
-    h1 { font-size: 2rem; margin-bottom: 10px; color: #ff3366; }
-    p { font-size: 1.2rem; margin-bottom: 20px; }
-    button {
-        background: #ff66aa;
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        margin: 10px;
-        border-radius: 8px;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: background 0.3s;
-    }
-    button:hover { background: #ff3399; }
-    .dress-options {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-    }
-    .dress-card {
-        width: 120px;
-        cursor: pointer;
-        border: 2px solid transparent;
-        border-radius: 10px;
-        transition: border 0.3s, transform 0.3s;
-    }
-    .dress-card img { width: 100%; border-radius: 10px; }
-    .dress-card:hover {
-        border: 2px solid #ff3366;
-        transform: scale(1.05);
-    }
-    iframe { width: 100%; max-width: 400px; height: 250px; border: 2px solid #ff66aa; border-radius: 10px; }
-    .gif { width: 200px; margin: 20px 0; border-radius: 15px; }
-    /* Hearts animation */
-    .heart {
-        position: absolute;
-        font-size: 1.5rem;
-        color: #ff3366;
-        animation: floatUp 6s linear infinite;
-        pointer-events: none;
-    }
-    @keyframes floatUp {
-        0% { transform: translateY(100vh) scale(0.8); opacity: 0; }
-        10% { opacity: 1; }
-        100% { transform: translateY(-50px) scale(1.2); opacity: 0; }
-    }
-    /* Confetti */
-    .confetti-piece {
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        background-color: #ff66aa;
-        opacity: 0.8;
-        pointer-events: none;
-        animation: confettiFall 3s linear infinite;
-    }
-    @keyframes confettiFall {
-        0% { transform: translateY(0) rotate(0deg); }
-        100% { transform: translateY(100vh) rotate(360deg); }
-    }
+  :root{
+    --bg:#fff0f6;
+    --card:#fff;
+    --accent:#ff5fa8;
+    --accent-2:#ff9ecf;
+    --muted:#6b6b6b;
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: Inter, "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial;
+    background: linear-gradient(180deg, #fff0f6 0%, #fff8fb 100%);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    color:#222;
+    overflow:hidden;
+  }
+
+  /* Container */
+  .app{
+    position:relative;
+    width:100%;
+    height:100vh;
+    max-width:860px;
+    margin:0 auto;
+    padding:20px;
+  }
+
+  /* Card */
+  .card{
+    width:100%;
+    height:100%;
+    background:var(--card);
+    border-radius:var(--radius);
+    box-shadow: 0 10px 30px rgba(255,95,168,0.12);
+    padding:20px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  header{
+    display:flex;
+    gap:14px;
+    align-items:center;
+    margin-bottom:6px;
+  }
+  .logo{
+    width:56px;
+    height:56px;
+    border-radius:14px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-weight:700;
+    font-size:20px;
+    box-shadow: 0 6px 20px rgba(255,95,168,0.18);
+  }
+  header h1{
+    margin:0;
+    font-size:18px;
+    color:var(--accent);
+  }
+  header p{margin:0;font-size:12px;color:var(--muted)}
+
+  /* Pages (stacked absolute for transitions) */
+  .page{
+    position:absolute;
+    inset:80px 20px 20px 20px;
+    background:transparent;
+    transition: transform 500ms cubic-bezier(.2,.9,.3,1), opacity 400ms;
+    transform:translateX(120%);
+    opacity:0;
+    padding:10px;
+    overflow:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  .page.active{ transform:translateX(0); opacity:1; }
+
+  /* Title & text */
+  .title{ font-size:22px; margin:8px 0; color:#ff3b86; font-weight:700; }
+  .lead{ font-size:15px; color:#333; margin-bottom:14px; }
+
+  /* Buttons */
+  .row{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; justify-content:center; margin-top:12px; }
+  .btn{
+    background:var(--accent);
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:12px;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow: 0 8px 18px rgba(255,95,168,0.12);
+    transition: transform .12s, background .12s;
+  }
+  .btn:hover{ transform:translateY(-3px); }
+  .btn.secondary{ background:#fff; color:var(--accent); border:2px solid #ffd3e8; box-shadow:none; }
+  .small{ padding:8px 12px; border-radius:10px; font-size:14px; }
+
+  /* GIFs */
+  .gif{ max-width:220px; border-radius:12px; box-shadow: 0 8px 18px rgba(0,0,0,0.06); display:block; margin:10px auto; }
+
+  /* Dress options */
+  .grid{ display:flex; gap:14px; justify-content:center; align-items:flex-start; flex-wrap:wrap; margin-top:8px; }
+  .card-option{
+    width:130px; background:linear-gradient(180deg,#fff,#fff); border-radius:12px; padding:8px; text-align:center; cursor:pointer;
+    border:2px solid transparent; transition: transform .14s, box-shadow .14s, border .14s;
+  }
+  .card-option img{ width:100%; height:170px; object-fit:cover; border-radius:8px; display:block; }
+  .card-option:hover{ transform:translateY(-6px); border-color:#ffd3e8; box-shadow: 0 12px 28px rgba(255,95,168,0.08); }
+  .card-option .opt-title{ margin-top:8px; font-weight:600; color:#ff4d87; font-size:14px; }
+
+  /* Accept/Reject area */
+  .accept-area{ display:flex; gap:16px; align-items:center; justify-content:center; margin-top:12px; position:relative; min-height:120px; }
+
+  /* Reject button will be positioned absolute inside .accept-area */
+  .reject-btn{
+    position:absolute;
+    right:20px;
+    bottom:18px;
+    background:#fff;
+    color:#ff416c;
+    border:2px solid #ffd3e8;
+    padding:12px 18px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:all 200ms ease;
+    font-weight:700;
+  }
+
+  /* Final placeholder image */
+  .photo-placeholder{
+    margin:12px auto;
+    width:220px; height:220px; border-radius:14px;
+    background:linear-gradient(180deg,#fff6fb,#fff); border:2px dashed #ffdce7;
+    display:flex; align-items:center; justify-content:center; color:#ff6ea0; font-weight:700; font-size:14px;
+    box-shadow: 0 10px 28px rgba(255,95,168,0.06);
+  }
+  .photo-preview{ width:220px; height:220px; object-fit:cover; border-radius:14px; display:block; margin:8px auto; }
+
+  /* small text */
+  .muted{ font-size:13px; color:var(--muted); margin-top:6px; text-align:center; }
+
+  /* responsive */
+  @media (max-width:520px){
+    .card-option{ width:42%; }
+    .page{ inset:90px 10px 10px 10px; }
+    header h1{ font-size:16px; }
+  }
 </style>
 </head>
 <body>
+<div class="app">
+  <div class="card" role="main">
+    <header>
+      <div class="logo">💕</div>
+      <div>
+        <h1>Birthday Invite — Nov 9</h1>
+        <p>Tap through for surprises 🌸</p>
+      </div>
+    </header>
 
-<!-- Hearts background generator -->
+    <!-- Page 1: Intro -->
+    <section id="page-1" class="page active" aria-hidden="false">
+      <div class="title">Hey love 💖</div>
+      <div class="lead">I planned a little birthday date for you. Will you join me for a special day? (Hint: there are surprises!)</div>
+      <img class="gif" src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" alt="cute heart gif">
+      <div class="row">
+        <button class="btn" onclick="goTo(2)">Continue 💕</button>
+      </div>
+      <div class="muted">Swipe or use Continue to move forward — mobile friendly ✨</div>
+    </section>
+
+    <!-- Page 2: Date & Location -->
+    <section id="page-2" class="page" aria-hidden="true">
+      <div class="title">When & Where 📍</div>
+      <div class="lead">📅 <strong>9 November 2025</strong> — meet at <strong>VivoCity</strong></div>
+      <img class="gif" src="https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif" alt="map gif">
+      <div style="text-align:center; margin-top:8px;">
+        <a class="btn secondary" href="https://goo.gl/maps/5jLZ2q8zJkF2" target="_blank" rel="noreferrer">Open directions in Google Maps</a>
+      </div>
+      <!-- Optional embed (works if you add API key) -->
+      <div style="margin-top:10px; display:flex; justify-content:center;">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d63819.8806366818!2d103.84736500155368!3d1.330554515090712!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e3!4m5!1s0x31da3da423e4652b%3A0xe79ba2bd94482865!2sPasir%20Ris%20Grove%2C%20D&#39;Nest%2C%20Singapore!3m2!1d1.3702809999999999!2d103.94630839999999!4m5!1s0x31da1958974bbc2b%3A0xba34578f519df13f!2s1%20HarbourFront%20Walk%2C%20VivoCity%2C%20Singapore%20098585!3m2!1d1.2647138999999998!2d103.8231658!5e0!3m2!1sen!2ssg!4v1762245046676!5m2!1sen!2ssg" 
+            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+      <div class="row">
+        <button class="btn secondary small" onclick="goTo(1)">Back</button>
+        <button class="btn" onclick="goTo(3)">Pick an Outfit 👗</button>
+      </div>
+    </section>
+
+    <!-- Page 3: Dress Selection -->
+    <section id="page-3" class="page" aria-hidden="true">
+      <div class="title">Pick our vibe — what should you wear?</div>
+      <div class="lead">Tap an outfit you like. Don’t worry — you’ll look gorgeous in anything 💕</div>
+      <div class="grid" role="list">
+        <!-- Dressy Chic -->
+        <div class="card-option" role="listitem" onclick="selectOutfit('Dressy Chic')">
+          <img src="https://images.unsplash.com/photo-1520962911098-0f6c8d0f3f28?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=9c9a2d6a0f2c6c8b2a5d8b3e5a2c4d6e" alt="Dressy Chic">
+          <div class="opt-title">Dressy Chic</div>
+        </div>
+
+        <!-- Semi-Casual Cute -->
+        <div class="card-option" role="listitem" onclick="selectOutfit('Semi-Casual Cute')">
+          <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=8a9b6dfa8b0d6b7e9f2f4f6c8b1ded46" alt="Semi Casual">
+          <div class="opt-title">Semi-Casual Cute</div>
+        </div>
+
+        <!-- Cozy Casual -->
+        <div class="card-option" role="listitem" onclick="selectOutfit('Cozy Casual')">
+          <img src="https://images.unsplash.com/photo-1514996937319-344454492b37?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=2b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e" alt="Cozy Casual">
+          <div class="opt-title">Cozy Casual</div>
+        </div>
+      </div>
+
+      <img class="gif" src="https://media.giphy.com/media/3o6Zt2sANz0R4mVqXe/giphy.gif" alt="cute outfit gif" style="margin-top:12px">
+      <div class="row">
+        <button class="btn secondary small" onclick="goTo(2)">Back</button>
+        <button class="btn" onclick="goTo(4)">I picked — Next</button>
+      </div>
+    </section>
+
+    <!-- Page 4: Accept/Reject -->
+    <section id="page-4" class="page" aria-hidden="true">
+      <div class="title">Do you accept this date mission? ❤️</div>
+      <div class="lead">I really hope you say yes — but it's your choice 💕</div>
+
+      <img class="gif" src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="please gif">
+
+      <div class="accept-area">
+        <button id="acceptBtn" class="btn" onclick="handleAccept()">Accept 💖</button>
+
+        <!-- reject button positioned absolutely inside accept-area; JS will move it -->
+        <button id="rejectBtn" class="reject-btn" onclick="handleRejectClick()">Reject 💔</button>
+      </div>
+
+      <div class="muted">Hint: click Reject if you’re feeling dramatic 😉</div>
+      <div class="row">
+        <button class="btn secondary small" onclick="goTo(3)">Back</button>
+      </div>
+    </section>
+
+    <!-- Reject Page (we reuse same card but change question) -->
+    <section id="reject-loop" class="page" aria-hidden="true">
+      <div class="title" id="rejectQuestion">Are you sure?</div>
+      <div class="lead">Think it over — but I may keep asking... 😇</div>
+
+      <img class="gif" src="https://media.giphy.com/media/26n6WywJyh39n1pBu/giphy.gif" alt="pleading gif">
+
+      <div class="row" style="margin-top:18px;">
+        <button id="rejectLoopBtn" class="btn secondary small" onclick="rejectLoopNext()">Yes</button>
+        <button class="btn" onclick="handleAccept()">Accept 💖</button>
+      </div>
+      <div class="muted">You can accept anytime — I promise it'll be fun! 🎈</div>
+    </section>
+
+    <!-- Final Page -->
+    <section id="page-final" class="page" aria-hidden="true">
+      <div class="title">Yay — you said yes! 🥳</div>
+      <div class="lead">I’m so happy! Here’s what you selected: <strong id="finalChoice">—</strong></div>
+
+      <img class="gif" src="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif" alt="celebration gif">
+
+      <div style="text-align:center; margin-top:12px;">
+        <a id="calendarAdd" class="btn" href="#" target="_blank" rel="noreferrer">Add to Google Calendar</a>
+        <a class="btn secondary" href="https://goo.gl/maps/5jLZ2q8zJkF2" target="_blank" rel="noreferrer">Open Map</a>
+      </div>
+
+      <div style="margin-top:18px; text-align:center;">
+        <div class="photo-placeholder" id="photoPlaceholder">Your photo goes here 💫</div>
+        <input id="photoInput" type="file" accept="image/*" style="margin-top:10px;">
+        <div class="muted">Upload a picture to preview here (for you to replace later)</div>
+      </div>
+
+      <div class="row" style="margin-top:16px;">
+        <button class="btn secondary small" onclick="goTo(1)">Start Over</button>
+      </div>
+    </section>
+
+  </div>
+</div>
+
 <script>
-function createHearts() {
-    for(let i=0; i<30; i++){
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
-        heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.fontSize = (Math.random()*20 + 10) + 'px';
-        heart.style.animationDuration = (4 + Math.random()*4) + 's';
-        heart.textContent = '💖';
-        document.body.appendChild(heart);
+  // State
+  let selectedOutfit = null;
+  let currentPage = 1;
+  const totalPages = 5; // pages are 1..5 (final is 5)
+  // Reject loop state
+  let rejectCount = 0; // how many times clicked
+  // To avoid accepting when reject loop forced, we'll show only accept after 4 rejects
+
+  // Page helper
+  function showPage(idNum){
+    // hide all pages
+    document.querySelectorAll('.page').forEach(p => {
+      p.classList.remove('active');
+      p.setAttribute('aria-hidden','true');
+    });
+    // special mapping: final index 5 -> page-final
+    let el = null;
+    switch(idNum){
+      case 1: el = document.getElementById('page-1'); break;
+      case 2: el = document.getElementById('page-2'); break;
+      case 3: el = document.getElementById('page-3'); break;
+      case 4: el = document.getElementById('page-4'); break;
+      case 5: el = document.getElementById('page-final'); break;
+      default: el = document.getElementById('page-1');
     }
-}
-createHearts();
-</script>
-
-<!-- Page 1: Intro -->
-<div class="page active" id="page1">
-    <h1>Hey love 💖</h1>
-    <p>I have a special birthday date planned just for you! Will you join me?</p>
-    <img src="https://media.giphy.com/media/l0MYB8Ory7Hqefo9a/giphy.gif" alt="Cute GIF" class="gif">
-    <br>
-    <button onclick="nextPage()">Yes, I’m excited!</button>
-</div>
-
-<!-- Page 2: Date & Location -->
-<div class="page" id="page2">
-    <h1>When & Where</h1>
-    <p>📅 Date: 9th November 2025</p>
-    <p>🕒 Time: 12:00 PM</p>
-    <p>📍 Location: VivoCity Singapore</p>
-    <a href="https://goo.gl/maps/5jLZ2q8zJkF2" target="_blank">Open in Google Maps</a>
-    <iframe
-        src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d63819.8806366818!2d103.84736500155368!3d1.330554515090712!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e3!4m5!1s0x31da3da423e4652b%3A0xe79ba2bd94482865!2sPasir%20Ris%20Grove%2C%20D&#39;Nest%2C%20Singapore!3m2!1d1.3702809999999999!2d103.94630839999999!4m5!1s0x31da1958974bbc2b%3A0xba34578f519df13f!2s1%20HarbourFront%20Walk%2C%20VivoCity%2C%20Singapore%20098585!3m2!1d1.2647138999999998!2d103.8231658!5e0!3m2!1sen!2ssg!4v1762245046676!5m2!1sen!2ssg" 
-        width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-    </iframe>
-    <br>
-    <button onclick="nextPage()">Next</button>
-</div>
-
-<!-- Page 3: Dress Code Selection -->
-<div class="page" id="page3">
-    <h1>Pick Your Outfit 💃</h1>
-    <p>Click on the outfit you’d like!</p>
-    <div class="dress-options">
-        <div class="dress-card" onclick="selectDress('Elegant Dress')">
-            <img src="https://i.ibb.co/2N6pM37/dress1.jpg" alt="Elegant Dress">
-            <p>Elegant Dress</p>
-        </div>
-        <div class="dress-card" onclick="selectDress('Casual Chic')">
-            <img src="https://i.ibb.co/BtFhJx6/casual1.jpg" alt="Casual Chic">
-            <p>Casual Chic</p>
-        </div>
-        <div class="dress-card" onclick="selectDress('Smart Outfit')">
-            <img src="https://i.ibb.co/TrcXkMX/smart1.jpg" alt="Smart Outfit">
-            <p>Smart Outfit</p>
-        </div>
-    </div>
-</div>
-
-<!-- Page 4: Accept / Reject -->
-<div class="page" id="page4">
-    <h1>Will you come? 😘</h1>
-    <button onclick="accept()">Accept 💖</button>
-    <button onclick="reject(1)">Reject 😢</button>
-</div>
-
-<!-- Page 5: Reject loop -->
-<div class="page" id="rejectPage">
-    <h1 id="rejectMsg">Are you sure?</h1>
-    <button onclick="reject(nextReject)">No 😢</button>
-    <button onclick="accept()">Accept 💖</button>
-</div>
-
-<!-- Page 6: Final Accept -->
-<div class="page" id="finalPage">
-    <h1>Yay! Can’t wait 💖</h1>
-    <p>Your choice: <span id="chosenDress"></span></p>
-    <a id="calendarLink" href="#" target="_blank"><button>Add to Google Calendar</button></a>
-    <img src="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif" alt="Celebration GIF" class="gif">
-</div>
-
-<script>
-let currentPage = 1;
-let chosenDress = '';
-let nextReject = 2;
-const rejectMessages = ["Are you sure?", "Are you very very sure?", "Are you super sure?", "Too bad, you have no choice! 💖"];
-
-function nextPage() {
-    document.getElementById(`page${currentPage}`).classList.remove('active');
-    currentPage++;
-    document.getElementById(`page${currentPage}`).classList.add('active');
-}
-
-function selectDress(dress) {
-    chosenDress = dress;
-    alert(`You picked: ${dress}`);
-    nextPage();
-}
-
-function accept() {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('finalPage').classList.add('active');
-    document.getElementById('chosenDress').textContent = chosenDress || 'No selection';
-    // Add confetti
-    for(let i=0;i<50;i++){
-        const confetti = document.createElement('div');
-        confetti.classList.add('confetti-piece');
-        confetti.style.left = Math.random()*100 + 'vw';
-        confetti.style.backgroundColor = `hsl(${Math.random()*360},100%,70%)`;
-        confetti.style.animationDuration = 2 + Math.random()*2 + 's';
-        document.body.appendChild(confetti);
+    if(el){
+      el.classList.add('active');
+      el.setAttribute('aria-hidden','false');
     }
-    // Google Calendar event
+    currentPage = idNum;
+  }
+
+  function goTo(n){
+    // show page n with small debounce
+    showPage(n);
+  }
+
+  // Outfit selection
+  function selectOutfit(name){
+    selectedOutfit = name;
+    // show a little confirmation and keep user on the page
+    document.getElementById('finalChoice').textContent = selectedOutfit;
+    // soft highlight chosen option (visual feedback)
+    document.querySelectorAll('.card-option').forEach(c => {
+      c.style.opacity = (c.textContent.includes(name) ? '1' : '0.9');
+    });
+    // small confetti-ish flash (temporary)
+    const old = document.body.style.background;
+    document.body.style.background = 'linear-gradient(180deg,#fff0f6,#fff2f9)';
+    setTimeout(()=> document.body.style.background = old, 300);
+  }
+
+  // Accept flow
+  function handleAccept(){
+    // Fill calendar link (Google Calendar)
     const start = '20251109T170000';
     const end = '20251109T210000';
     const text = encodeURIComponent("Birthday Date with You 💖");
-    const details = encodeURIComponent("Can't wait to spend this special day together!");
+    const details = encodeURIComponent("Movie, aquarium and dinner at VivoCity. Can't wait!");
     const location = encodeURIComponent("VivoCity Singapore");
     const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${start}/${end}&details=${details}&location=${location}`;
-    document.getElementById('calendarLink').href = url;
-}
+    document.getElementById('calendarAdd').href = url;
 
-function reject(stage) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    if(stage >= rejectMessages.length) {
-        accept();
-        return;
+    // move to final page
+    showPage(5);
+  }
+
+  // Reject logic (the floating shrinking button)
+  const rejectBtn = document.getElementById('rejectBtn');
+  const acceptBtn = document.getElementById('acceptBtn');
+
+  // initialize position inside accept-area
+  function resetRejectButton(){
+    // place somewhat bottom-right by default
+    rejectBtn.style.width = 'auto';
+    rejectBtn.style.transform = 'scale(1)';
+    rejectBtn.style.right = '20px';
+    rejectBtn.style.bottom = '18px';
+    rejectBtn.style.left = 'auto';
+    rejectBtn.style.top = 'auto';
+    rejectBtn.style.fontSize = '';
+  }
+  resetRejectButton();
+
+  function handleRejectClick(){
+    // increment and run behavior
+    rejectCount++;
+    // update question text by adding "very" per reject
+    const q = document.getElementById('rejectQuestion');
+    // build string: base "Are you " + ("very " repeated rejectCount times) + "sure?"
+    let verys = '';
+    for(let i=0;i<rejectCount;i++) verys += 'very ';
+    q.textContent = `Are you ${verys}sure?`;
+
+    // shrink the reject button progressively
+    const shrinkFactor = Math.max(0.45, 1 - 0.13 * rejectCount); // don't go below 0.45
+    rejectBtn.style.transform = `scale(${shrinkFactor})`;
+    rejectBtn.style.fontSize = `${Math.max(12, 16 - rejectCount)}px`;
+
+    // move to a random position inside accept-area bounds
+    const area = document.querySelector('.accept-area');
+    const rect = area.getBoundingClientRect();
+    // compute random coords within area
+    const btnWidth = rejectBtn.getBoundingClientRect().width || 110;
+    const btnHeight = rejectBtn.getBoundingClientRect().height || 40;
+    const pad = 12;
+    const minX = rect.left + pad;
+    const maxX = rect.right - btnWidth - pad;
+    const minY = rect.top + pad;
+    const maxY = rect.bottom - btnHeight - pad;
+
+    // convert to positions relative to accept-area
+    const randX = Math.random() * (Math.max(0, maxX - minX)) + minX;
+    const randY = Math.random() * (Math.max(0, maxY - minY)) + minY;
+
+    // set absolute position relative to accept-area's offset parent
+    const parentRect = area.getBoundingClientRect();
+    const relLeft = randX - parentRect.left;
+    const relTop = randY - parentRect.top;
+    rejectBtn.style.position = 'absolute';
+    rejectBtn.style.left = relLeft + 'px';
+    rejectBtn.style.top = relTop + 'px';
+    rejectBtn.style.right = 'auto';
+    rejectBtn.style.bottom = 'auto';
+
+    // after moving, show reject-loop confirmation page if not reached max
+    if(rejectCount < 4){
+      // show reject loop screen for playful questions
+      showRejectLoop();
+    } else {
+      // Max rejects reached -> force only accept available
+      // Hide reject button and show accept-only state
+      rejectBtn.style.display = 'none';
+      // change accept button label playful
+      acceptBtn.textContent = 'Okay... Fine — Accept 💕';
+      // make final question super pushy
+      const q2 = document.getElementById('rejectQuestion');
+      q2.textContent = 'Too many tries! You have no choice — accept 💘';
+      showRejectLoop();
     }
-    document.getElementById('rejectPage').classList.add('active');
-    document.getElementById('rejectMsg').textContent = rejectMessages[stage - 1];
-    nextReject = stage + 1;
-}
-</script>
+  }
 
+  // Show reject loop section (page)
+  function showRejectLoop(){
+    // show section that asks again but with Accept option and small Yes (keeps looping)
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const rl = document.getElementById('reject-loop');
+    rl.classList.add('active');
+  }
+
+  // Called when user clicks "Yes" (the small button) on reject-loop page
+  function rejectLoopNext(){
+    // increment rejectCount as another yes (they confirmed rejection)
+    rejectCount++;
+    // If they reached limit, force accept:
+    if(rejectCount >= 4){
+      // hide reject UI and accept
+      rejectBtn.style.display = 'none';
+      handleAccept();
+      return;
+    }
+    // update question text and shrink/move reject button further
+    const q = document.getElementById('rejectQuestion');
+    let verys = '';
+    for(let i=0;i<rejectCount;i++) verys += 'very ';
+    q.textContent = `Are you ${verys}sure?`;
+
+    // shrink further by adjusting style
+    const shrinkFactor = Math.max(0.45, 1 - 0.13 * rejectCount);
+    rejectBtn.style.transform = `scale(${shrinkFactor})`;
+    rejectBtn.style.fontSize = `${Math.max(11, 16 - rejectCount)}px`;
+
+    // random move
+    const area = document.querySelector('.accept-area');
+    const rect = area.getBoundingClientRect();
+    const btnWidth = rejectBtn.getBoundingClientRect().width || 100;
+    const btnHeight = rejectBtn.getBoundingClientRect().height || 36;
+    const pad = 8;
+    const minX = rect.left + pad;
+    const maxX = rect.right - btnWidth - pad;
+    const minY = rect.top + pad;
+    const maxY = rect.bottom - btnHeight - pad;
+    const randX = Math.random() * (Math.max(0, maxX - minX)) + minX;
+    const randY = Math.random() * (Math.max(0, maxY - minY)) + minY;
+    const parentRect = area.getBoundingClientRect();
+    const relLeft = randX - parentRect.left;
+    const relTop = randY - parentRect.top;
+    rejectBtn.style.position = 'absolute';
+    rejectBtn.style.left = relLeft + 'px';
+    rejectBtn.style.top = relTop + 'px';
+
+    // after updating, return to accept page so they can try again
+    showPage(4);
+  }
+
+  // Photo upload preview
+  const photoInput = document.getElementById('photoInput');
+  photoInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const url = URL.createObjectURL(file);
+    // replace placeholder with image preview
+    const placeholder = document.getElementById('photoPlaceholder');
+    const img = document.createElement('img');
+    img.src = url;
+    img.className = 'photo-preview';
+    placeholder.replaceWith(img);
+  });
+
+  // Small keyboard / swipe support: left/right arrows to navigate
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'ArrowRight'){
+      if(currentPage < 5) goTo(currentPage+1);
+    } else if(e.key === 'ArrowLeft'){
+      if(currentPage > 1) goTo(currentPage-1);
+    }
+  });
+
+  // Initialize: show page 1
+  showPage(1);
+
+  // Convenience: if user goes to page 4 (accept/reject), reset reject btn
+  const observer = new MutationObserver(() => {
+    // when the accept page becomes visible, reset reject position if needed
+    const p4 = document.getElementById('page-4');
+    if(p4.classList.contains('active')){
+      // show reject button again if was hidden but rejects <4
+      if(rejectCount < 4){
+        rejectBtn.style.display = 'block';
+      }
+    }
+  });
+  observer.observe(document.querySelector('.card'), { attributes: false, childList: true, subtree: true });
+
+  // For accessibility: clicking Accept on final page will also prompt calendar
+  document.getElementById('calendarAdd').addEventListener('click', () => {
+    // nothing extra needed; link already set when accept called
+  });
+
+  // Expose some functions to global for HTML onclick
+  window.goTo = goTo;
+  window.selectOutfit = function(name){
+    selectOutfit(name);
+    // set final choice badge
+    document.getElementById('finalChoice').textContent = name;
+  };
+  window.handleAccept = handleAccept;
+  window.handleRejectClick = handleRejectClick;
+  window.rejectLoopNext = rejectLoopNext;
+
+</script>
 </body>
 </html>
