@@ -216,7 +216,7 @@
 
         <div style="margin-top:12px; text-align:center;">
           <!-- Backend placeholder: replace this element on your server with the final image -->
-          <div id="backendPhotoPlaceholder" class="photo-placeholder">[ Your final photo will appear here ]</div>
+          <div id="backendPhotoPlaceholder" class="photo-placeholder"><img src="PICC\Screenshot_2021-09-12-17-00-08-73.jpg" alt="Our picture" class="photo"></div>
           <div class="muted">(This placeholder is meant for your backend to replace with the final image.)</div>
         </div>
 
@@ -229,33 +229,26 @@
   </div>
 </div>
 
-<!-- background audio (optional) -->
-<audio id="bgAudio" loop preload="none">
-  <!-- You can replace audioSrc with a direct mp3 URL you host that is the original Pointer Sisters track.
-       For copyright reasons, the file is not included here. -->
-  <!-- Example (replace with your own hosted MP3): -->
-  <!-- <source src="https://example.com/im-so-excited.mp3" type="audio/mpeg"> -->
-Your browser does not support the audio element.
-</audio>
+
 
 <script>
   // --- state & helpers
   let selected = null;
   const refs = {
     "Dressy Chic": [
-      "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=7d4f5c2b5c9b8e3d3b7a6b8c9d0e1f2a",
-      "https://images.unsplash.com/photo-1520975918996-1bd7b0c0d9b3?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=9f5f7c9c2f6d4b4b5a9f6a2d6ceb3a77",
-      "https://images.unsplash.com/photo-1495121605193-b116b5b09f6b?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=3f7d3d9d9e7b0e6a5f3c7a1b2c4d6e8f"
+      "PICC\IMG-20200127-WA0032.jpg",
+      "PICC\IMG20221216113542.jpg",
+      "PICC\IMG-20230611-WA0003.jpeg"
     ],
     "Semi-Casual Cute": [
-      "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=8a9b6dfa8b0d6b7e9f2f4f6c8b1ded46",
-      "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=c7d3b6a9f1e2b3a4c5d6e7f8a9b0c1d2",
-      "https://images.unsplash.com/photo-1520975698510-9fb0f9e8b3f0?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=7e7f0d1d8b6f9f6e2e2f3b6a1a1a7a6b"
+      "PICC\IMG_20201218_203137.jpg",
+      "PICC\Screenshot_2022-06-21-17-50-39-53_6012fa4d4ddec268fc5c7112cbb265e7.jpg",
+      "PICC\Screenshot 2025-11-04 171719.png"
     ],
     "Cozy Casual": [
-      "https://images.unsplash.com/photo-1514996937319-344454492b37?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=2b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e",
-      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=1a2b3c4d5e6f7890a1b2c3d4e5f6a7b8",
-      "https://images.unsplash.com/photo-1520975105800-3f8c0f7f7d1f?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d"
+      "PICC\IMG20220821132602.jpg",
+      "PICC\IMG-20230906-WA0001.jpg",
+      "PICC\IMG-20230509-WA0017.jpeg"
     ]
   };
 
@@ -269,7 +262,7 @@ Your browser does not support the audio element.
   // choose outfit: this runs when clicking a card
   function chooseOption(el){
     // de-select others
-    document.querySelectorAll('.card-option').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.card-option').forEach(c => c.classList.remove('selected')); 
     el.classList.add('selected');
     selected = el.getAttribute('data-name');
     // update the confirm lead to show the selection succinctly
@@ -344,18 +337,6 @@ Your browser does not support the audio element.
     const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${start}/${end}&details=${details}&location=${location}`;
     document.getElementById('calendarBtn').href = calendarUrl;
 
-    // play bg audio if available
-    try {
-      const audio = document.getElementById('bgAudio');
-      // if audio source is present, play; else open youtube (or rely on user to click Play)
-      if(audio.querySelector('source')){
-        audio.play().catch(()=>{/* autoplay may be blocked */});
-      } else {
-        // no local audio file is provided (copyright); show YouTube hint (we already have link)
-        // nothing forced — user can open via "Open song (YouTube)" or click Play music toggle
-      }
-    } catch(e){ console.warn(e) }
-
     // show final page
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('pageFinal').classList.add('active');
@@ -366,27 +347,6 @@ Your browser does not support the audio element.
     else finalText.textContent = `I can't wait to celebrate with you! 💞`;
   }
 
-  // Music toggle: attempt to play audio element if a source is set; otherwise open YouTube on request
-  const audioEl = document.getElementById('bgAudio');
-  let musicPlaying = false;
-  function toggleMusic(){
-    // if audio element has source(s), toggle play/pause
-    if(audioEl.querySelector('source')){
-      if(!musicPlaying){
-        audioEl.play().catch(()=>{ alert('Autoplay blocked — please tap Play on your device'); });
-        musicPlaying = true;
-        document.getElementById('musicToggle').textContent = 'Pause music';
-      } else {
-        audioEl.pause();
-        musicPlaying = false;
-        document.getElementById('musicToggle').textContent = 'Play music';
-      }
-    } else {
-      // fallback: open youtube link in new tab (user can play original there)
-      const open = confirm('No embedded audio provided for copyright reasons. Open the song on YouTube?');
-      if(open) window.open(document.getElementById('youtubeSong').href, '_blank');
-    }
-  }
 
   // Keyboard navigation
   document.addEventListener('keydown', (e) => {
